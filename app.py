@@ -63,14 +63,11 @@ DOCUMENTS = [
     "Churros are fried pastry sticks rolled in cinnamon sugar and served with chocolate dipping sauce. They are popular street food at Mexican fairs and festivals.",
     "Horchata is a drink made from rice, water, cinnamon, and sugar. It is served cold and is popular with spicy food because it cools down the heat of chili peppers.",
     "Salsa is a fundamental condiment in Mexican cuisine. Types include salsa roja made with red tomatoes, salsa verde made with tomatillos, and pico de gallo with fresh tomato, onion, and cilantro.",
-    "Mexican cooking uses traditional tools like the comal, a flat griddle for tortillas, and the molcajete, a stone mortar for grinding spices. Nixtamalization is an ancient process of soaking corn developed by the Aztecs over 3500 years ago.",
+    "Mexican cooking uses traditional tools like the comal, a flat griddle for tortillas, and the molcajete, a stone mortar for grinding spices. Nixtamalization is an ancient process developed by the Aztecs over 3500 years ago.",
     "El taco es el simbolo mas reconocido de la cocina mexicana. Consiste en una tortilla de maiz o harina con rellenos como carne asada, pollo o verduras. Los tacos de calle son parte fundamental de la cultura culinaria mexicana.",
-    "El chile es el ingrediente mas importante de la cocina mexicana. Existen mas de 60 variedades en Mexico, desde el suave poblano hasta el picante habanero. Son la base de salsas, moles y marinadas en toda la cocina mexicana.",
-    "La cocina mexicana fue declarada Patrimonio Cultural Inmaterial por la UNESCO en 2010. Destaca por su diversidad de ingredientes y sabores regionales. Los ingredientes principales son el maiz, el chile, el frijol y el jitomate.",
+    "El chile es el ingrediente mas importante de la cocina mexicana. Existen mas de 60 variedades en Mexico, desde el suave poblano hasta el picante habanero. Son la base de salsas, moles y marinadas.",
+    "La cocina mexicana fue declarada Patrimonio Cultural Inmaterial por la UNESCO en 2010. Los ingredientes principales son el maiz, el chile, el frijol y el jitomate.",
 ]
-
-CHUNK_SIZE_A = 200
-CHUNK_SIZE_B = 500
 
 @st.cache_resource(show_spinner="Loading AI model...")
 def load_model():
@@ -78,12 +75,12 @@ def load_model():
     return HuggingFaceEmbeddings(model_name="paraphrase-multilingual-MiniLM-L12-v2")
 
 @st.cache_resource(show_spinner="Building search database...")
-def build_store(_docs: tuple, chunk_size: int = 300):
+def build_store(_docs: tuple):
     from langchain_text_splitters import RecursiveCharacterTextSplitter
     from langchain_community.vectorstores import Chroma
     splitter = RecursiveCharacterTextSplitter(
-        chunk_size=chunk_size,
-        chunk_overlap=int(chunk_size * 0.15),
+        chunk_size=300,
+        chunk_overlap=50,
         separators=["\n\n", "\n", ". ", " ", ""],
     )
     chunks = []
@@ -92,7 +89,6 @@ def build_store(_docs: tuple, chunk_size: int = 300):
     store = Chroma.from_texts(
         texts=chunks,
         embedding=load_model(),
-        collection_name=f"kb_{chunk_size}",
     )
     return store, chunks
 
@@ -168,14 +164,13 @@ elif page == "Search":
 
     query = st.text_input(
         "Ask a question in English or Spanish",
-        placeholder="e.g. What are the most famous Mexican dishes? / Que es el taco?"
+        placeholder="e.g. What is tequila made from? / Que es el taco?"
     )
     num_results = st.slider("Number of results", 1, 5, 3)
 
     if query:
         with st.spinner("Searching..."):
             results = store.similarity_search_with_score(query, k=num_results)
-
         st.subheader(f"Top {len(results)} results")
         scores = [score for _, score in results]
         min_score = min(scores)
@@ -196,8 +191,7 @@ elif page == "Search":
                 unsafe_allow_html=True
             )
     else:
-        st.info("👆 Type a question above in English or Spanish to search the knowledge base.")
-
+        st.info("👆 Type a question above to search the knowledge base.")
     st.caption("Powered by paraphrase-multilingual-MiniLM-L12-v2 + ChromaDB")
 
 elif page == "Explore Chunks":
@@ -214,8 +208,7 @@ elif page == "Explore Chunks":
 
     st.markdown("---")
     st.subheader("Chunk length distribution")
-    chart_df = pd.DataFrame({"Chunk length (chars)": lengths})
-    st.bar_chart(chart_df)
+    st.bar_chart(pd.DataFrame({"Chunk length (chars)": lengths}))
 
     st.markdown("---")
     st.subheader("All chunks")
@@ -226,56 +219,32 @@ elif page == "Explore Chunks":
 elif page == "About & Stats":
     st.title("📊 About & Statistics")
 
-    st.subheader("Chunking Strategy Comparison")
-    st.markdown("This app was tested with two different chunk sizes to compare search quality.")
+    st.subheader("Chunking Strategy")
+    st.markdown("""
+    This app uses **chunk_size = 300 characters** with **chunk_overlap = 50 characters**.
 
-    col1, col2 = st.columns(2)
-    with col1:
-        st.markdown("### Chunk size = 200 chars")
-        st.markdown("""
-        - More chunks created
-        - Results are more precise
-        - Less surrounding context
-        - Better for specific fact queries
-        """)
-        store_a, chunks_a = build_store(tuple(DOCUMENTS), CHUNK_SIZE_A)
-        st.metric("Chunks created", len(chunks_a))
+    **Why these values?**
+    - 300 chars is large enough to contain a complete thought
+    - 50 chars overlap prevents cutting sentences mid-thought
+    - Smaller chunks (200) are more precise but lose context
+    - Larger chunks (500) have more context but are less precise
+    """)
 
-    with col2:
-        st.markdown("### Chunk size = 500 chars")
-        st.markdown("""
-        - Fewer larger chunks
-        - More surrounding context
-        - May include irrelevant text
-        - Better for broad topic queries
-        """)
-        store_b, chunks_b = build_store(tuple(DOCUMENTS), CHUNK_SIZE_B)
-        st.metric("Chunks created", len(chunks_b))
-
-    st.markdown("---")
-    st.subheader("Live comparison")
-    test_query = st.text_input(
-        "Try a query on both chunk sizes at once:",
-        placeholder="e.g. How is tequila made?"
-    )
-    if test_query:
-        r_a = store_a.similarity_search_with_score(test_query, k=1)
-        r_b = store_b.similarity_search_with_score(test_query, k=1)
-        col1, col2 = st.columns(2)
-        with col1:
-            st.markdown("**Best match (size=200)**")
-            if r_a:
-                st.info(r_a[0][0].page_content)
-        with col2:
-            st.markdown("**Best match (size=500)**")
-            if r_b:
-                st.info(r_b[0][0].page_content)
+    store, chunks = build_store(tuple(DOCUMENTS))
+    from langchain_text_splitters import RecursiveCharacterTextSplitter
+    s200 = RecursiveCharacterTextSplitter(chunk_size=200, chunk_overlap=30)
+    s500 = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=75)
+    c200 = []
+    c500 = []
+    for doc in DOCUMENTS:
+        c200.extend(s200.split_text(doc))
+        c500.extend(s500.split_text(doc))
 
     st.markdown("---")
     st.subheader("Chunk Size Comparison Chart")
     chart_data = pd.DataFrame({
-        "Chunk Size": ["Size 200 (small)", "Size 500 (large)"],
-        "Number of Chunks": [len(chunks_a), len(chunks_b)]
+        "Chunk Size": ["Size 200 (small)", "Size 300 (current)", "Size 500 (large)"],
+        "Number of Chunks": [len(c200), len(chunks), len(c500)]
     })
     st.bar_chart(chart_data.set_index("Chunk Size"))
 
