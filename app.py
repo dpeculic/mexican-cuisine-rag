@@ -1,13 +1,19 @@
+"""
+RAG Knowledge Base - Mexican Cuisine
+"""
+
 import streamlit as st
 import numpy as np
 import pandas as pd
-import chromadb
-from chromadb.utils import embedding_functions
 
 TOPIC_NAME = "Mexican Cuisine"
 TOPIC_ICON = "🌮"
 
-st.set_page_config(page_title=f"{TOPIC_NAME} Knowledge Base", page_icon=TOPIC_ICON, layout="wide")
+st.set_page_config(
+    page_title=f"{TOPIC_NAME} Knowledge Base",
+    page_icon=TOPIC_ICON,
+    layout="wide",
+)
 
 st.markdown("""
 <style>
@@ -46,46 +52,61 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 DOCUMENTS = [
-    "Tacos are one of the most iconic dishes in Mexican cuisine. A taco consists of a folded tortilla filled with beef, chicken, pork, fish, or vegetables. Tacos are topped with salsa, guacamole, cilantro, onion, and lime. They originated as street food in Mexico.",
-    "Guacamole is made by mashing ripe avocados with lime juice, salt, cilantro, onion, and tomato. It originated with the Aztecs in the 16th century. It is served as a dip with tortilla chips or as a topping for tacos.",
-    "Mole is a complex sauce made from chili peppers, spices, and chocolate with up to 30 ingredients. The most famous is mole negro from Oaxaca. It takes hours to prepare and is served over turkey or chicken.",
-    "Tamales are made of masa dough on a corn husk, filled with meat or cheese, then steamed. They have been made in Mexico for thousands of years. Tamales are popular during Christmas and celebrations.",
-    "Tequila is made from the blue agave plant in Jalisco. The agave takes 8 to 12 years to mature. Types include blanco, reposado, and anejo, which differ in aging time in oak barrels.",
-    "Mexican cuisine varies by region. Northern Mexico uses beef and flour tortillas. Oaxaca is known for seven moles. The Yucatan has Mayan dishes like cochinita pibil.",
-    "Enrique Olvera opened Pujol in Mexico City in 2000, ranking among the top 50 restaurants in the world. In 2010 UNESCO added Mexican cuisine to its Intangible Cultural Heritage list.",
-    "El taco es el simbolo mas reconocido de la cocina mexicana. Consiste en una tortilla con rellenos como carne asada, pollo o verduras. Los tacos de calle son fundamentales en la cultura mexicana.",
-    "El chile es el ingrediente mas importante de la cocina mexicana. Existen mas de 60 variedades, desde el suave poblano hasta el picante habanero. Son la base de salsas y moles.",
-    "La cocina mexicana fue declarada Patrimonio Cultural por la UNESCO en 2010. Los ingredientes principales son el maiz, el chile, el frijol y el jitomate.",
+    "Tacos are one of the most iconic dishes in Mexican cuisine. A taco consists of a folded or rolled tortilla filled with various ingredients such as beef, chicken, pork, fish, or vegetables. Tacos are typically topped with salsa, guacamole, cilantro, onion, and lime. They originated as street food in Mexico and are now eaten all over the world.",
+    "Guacamole is a creamy avocado-based dip made by mashing ripe avocados with lime juice, salt, cilantro, onion, and tomato. Guacamole originated with the Aztecs in the 16th century. It is commonly served as a dip with tortilla chips or as a topping for tacos and other Mexican dishes.",
+    "Mole is one of the most complex sauces in Mexican cuisine, made from chili peppers, spices, chocolate, and up to 30 different ingredients. The most famous version is mole negro from Oaxaca. It takes hours to prepare and is traditionally served over turkey or chicken.",
+    "Tamales are made of masa dough spread on a corn husk, filled with meat or cheese, then folded and steamed. They have been made in Mexico for thousands of years dating back to the Aztecs and Mayans. Tamales are especially popular during Christmas and other celebrations.",
+    "Tequila is made from the blue agave plant grown in the state of Jalisco. The agave takes 8 to 12 years to mature. Tequila must be made in Mexico to carry the name. Types include blanco, reposado, and anejo, which differ in aging time in oak barrels.",
+    "Mexican cuisine varies greatly by region. Northern Mexico uses more beef and flour tortillas. The Yucatan Peninsula features Mayan-influenced dishes like cochinita pibil. Oaxaca is known as the land of seven moles and is one of the culinary capitals of Mexico.",
+    "Mexico has produced world-renowned chefs like Enrique Olvera, born in 1976, whose restaurant Pujol ranks among the top 50 in the world. In 2010, UNESCO added traditional Mexican cuisine to its Intangible Cultural Heritage list.",
+    "Enchiladas are corn tortillas rolled around meat or cheese and covered with chili sauce. They are topped with cheese and sour cream and baked in the oven until the cheese melts.",
+    "Churros are fried pastry sticks rolled in cinnamon sugar and served with chocolate dipping sauce. They are popular street food at Mexican fairs and festivals.",
+    "Horchata is a drink made from rice, water, cinnamon, and sugar. It is served cold and is popular with spicy food because it cools down the heat of chili peppers.",
+    "Salsa is a fundamental condiment in Mexican cuisine. Types include salsa roja made with red tomatoes, salsa verde made with tomatillos, and pico de gallo with fresh tomato, onion, and cilantro.",
+    "Mexican cooking uses traditional tools like the comal, a flat griddle for tortillas, and the molcajete, a stone mortar for grinding spices. Nixtamalization is an ancient process of soaking corn developed by the Aztecs over 3500 years ago.",
+    "El taco es el simbolo mas reconocido de la cocina mexicana. Consiste en una tortilla de maiz o harina con rellenos como carne asada, pollo o verduras. Los tacos de calle son parte fundamental de la cultura culinaria mexicana.",
+    "El chile es el ingrediente mas importante de la cocina mexicana. Existen mas de 60 variedades en Mexico, desde el suave poblano hasta el picante habanero. Son la base de salsas, moles y marinadas en toda la cocina mexicana.",
+    "La cocina mexicana fue declarada Patrimonio Cultural Inmaterial por la UNESCO en 2010. Destaca por su diversidad de ingredientes y sabores regionales. Los ingredientes principales son el maiz, el chile, el frijol y el jitomate.",
 ]
 
-def chunk_text(text, size=200, overlap=20):
-    chunks = []
-    start = 0
-    while start < len(text):
-        end = min(start + size, len(text))
-        chunks.append(text[start:end])
-        start += size - overlap
-    return chunks
+CHUNK_SIZE_A = 200
+CHUNK_SIZE_B = 500
+
+@st.cache_resource(show_spinner="Loading AI model...")
+def load_model():
+    from langchain_community.embeddings import HuggingFaceEmbeddings
+    return HuggingFaceEmbeddings(model_name="paraphrase-multilingual-MiniLM-L12-v2")
 
 @st.cache_resource(show_spinner="Building search database...")
-def build_store(_docs: tuple):
-    ef = embedding_functions.DefaultEmbeddingFunction()
-    client = chromadb.Client()
-    collection = client.create_collection("knowledge_base", embedding_function=ef)
+def build_store(_docs: tuple, chunk_size: int = 300):
+    from langchain_text_splitters import RecursiveCharacterTextSplitter
+    from langchain_community.vectorstores import Chroma
+    splitter = RecursiveCharacterTextSplitter(
+        chunk_size=chunk_size,
+        chunk_overlap=int(chunk_size * 0.15),
+        separators=["\n\n", "\n", ". ", " ", ""],
+    )
     chunks = []
-    ids = []
     for doc in _docs:
-        doc_chunks = chunk_text(doc)
-        for chunk in doc_chunks:
-            chunks.append(chunk)
-            ids.append(f"chunk_{len(ids)}")
-    collection.add(documents=chunks, ids=ids)
-    return collection, chunks
+        chunks.extend(splitter.split_text(doc))
+    store = Chroma.from_texts(
+        texts=chunks,
+        embedding=load_model(),
+        collection_name=f"kb_{chunk_size}",
+    )
+    return store, chunks
 
-st.sidebar.markdown(f'<div class="sidebar-banner">{TOPIC_ICON} {TOPIC_NAME}</div>', unsafe_allow_html=True)
+st.sidebar.markdown(
+    f'<div class="sidebar-banner">{TOPIC_ICON} {TOPIC_NAME}</div>',
+    unsafe_allow_html=True
+)
 st.sidebar.markdown("*Your Mexican food search engine*")
 st.sidebar.markdown("---")
-page = st.sidebar.radio("Navigate", ["Home", "Search", "Explore Chunks", "About & Stats"], label_visibility="collapsed")
+page = st.sidebar.radio(
+    "Navigate",
+    ["Home", "Search", "Explore Chunks", "About & Stats"],
+    label_visibility="collapsed"
+)
 st.sidebar.markdown("---")
 st.sidebar.caption(f"{len(DOCUMENTS)} documents loaded")
 
@@ -135,51 +156,54 @@ if page == "Home":
         """, unsafe_allow_html=True)
 
     st.markdown("---")
-    collection, chunks = build_store(tuple(DOCUMENTS))
     col1, col2, col3 = st.columns(3)
     col1.metric("Documents", len(DOCUMENTS))
+    store, chunks = build_store(tuple(DOCUMENTS))
     col2.metric("Chunks", len(chunks))
-    col3.metric("Embedding model", "ChromaDB Default")
+    col3.metric("Embedding model", "Multilingual MiniLM")
 
 elif page == "Search":
     st.title("🔍 Semantic Search")
-    collection, chunks = build_store(tuple(DOCUMENTS))
+    store, chunks = build_store(tuple(DOCUMENTS))
 
-    query = st.text_input("Ask a question in English or Spanish", placeholder="e.g. What is tequila made from? / Que es el taco?")
+    query = st.text_input(
+        "Ask a question in English or Spanish",
+        placeholder="e.g. What are the most famous Mexican dishes? / Que es el taco?"
+    )
     num_results = st.slider("Number of results", 1, 5, 3)
 
     if query:
         with st.spinner("Searching..."):
-            results = collection.query(query_texts=[query], n_results=num_results)
+            results = store.similarity_search_with_score(query, k=num_results)
 
-        st.subheader(f"Top {num_results} results")
-        docs = results["documents"][0]
-        distances = results["distances"][0]
-        min_d = min(distances)
-        max_d = max(distances)
-        for i, (doc, dist) in enumerate(zip(docs, distances), 1):
-            if max_d == min_d:
+        st.subheader(f"Top {len(results)} results")
+        scores = [score for _, score in results]
+        min_score = min(scores)
+        max_score = max(scores)
+        for i, (doc, score) in enumerate(results, 1):
+            if max_score == min_score:
                 similarity = 1.0 if i == 1 else 0.5
             else:
-                similarity = 1 - ((dist - min_d) / (max_d - min_d + 0.0001))
+                similarity = 1 - ((score - min_score) / (max_score - min_score + 0.0001))
             similarity = max(0.0, min(1.0, similarity))
             level = "high" if i == 1 else ("med" if i == 2 else "low")
             emoji = "🟢" if level == "high" else ("🟡" if level == "med" else "⚪")
             st.markdown(
                 f'<div class="result-card relevance-{level}">'
                 f'<small style="color:#888;">{emoji} Result {i} &nbsp;·&nbsp; relevance: {similarity:.0%}</small>'
-                f'<p style="margin:8px 0 0;font-size:15px;line-height:1.6;">{doc}</p>'
+                f'<p style="margin:8px 0 0;font-size:15px;line-height:1.6;">{doc.page_content}</p>'
                 f'</div>',
                 unsafe_allow_html=True
             )
     else:
-        st.info("👆 Type a question above to search the knowledge base.")
+        st.info("👆 Type a question above in English or Spanish to search the knowledge base.")
 
-    st.caption("Powered by ChromaDB + Sentence Transformers")
+    st.caption("Powered by paraphrase-multilingual-MiniLM-L12-v2 + ChromaDB")
 
 elif page == "Explore Chunks":
     st.title("🔬 Explore Chunks")
-    collection, chunks = build_store(tuple(DOCUMENTS))
+    st.markdown("See how documents are split into chunks by the text splitter.")
+    store, chunks = build_store(tuple(DOCUMENTS))
 
     lengths = [len(c) for c in chunks]
     c1, c2, c3, c4 = st.columns(4)
@@ -202,31 +226,56 @@ elif page == "Explore Chunks":
 elif page == "About & Stats":
     st.title("📊 About & Statistics")
 
-    st.subheader("Chunking Strategy")
-    st.markdown("""
-    This app uses **chunk size = 200 characters** with an overlap of 20 characters.
+    st.subheader("Chunking Strategy Comparison")
+    st.markdown("This app was tested with two different chunk sizes to compare search quality.")
 
-    **Why chunk size 200?**
-    - Small enough to be precise and focused
-    - Large enough to contain meaningful context
-    - Overlap of 20 chars prevents cutting sentences mid-thought
+    col1, col2 = st.columns(2)
+    with col1:
+        st.markdown("### Chunk size = 200 chars")
+        st.markdown("""
+        - More chunks created
+        - Results are more precise
+        - Less surrounding context
+        - Better for specific fact queries
+        """)
+        store_a, chunks_a = build_store(tuple(DOCUMENTS), CHUNK_SIZE_A)
+        st.metric("Chunks created", len(chunks_a))
 
-    **Comparison with larger chunks:**
-    - Size 200: more chunks, more precise results
-    - Size 500: fewer chunks, more context per result
-    """)
+    with col2:
+        st.markdown("### Chunk size = 500 chars")
+        st.markdown("""
+        - Fewer larger chunks
+        - More surrounding context
+        - May include irrelevant text
+        - Better for broad topic queries
+        """)
+        store_b, chunks_b = build_store(tuple(DOCUMENTS), CHUNK_SIZE_B)
+        st.metric("Chunks created", len(chunks_b))
 
-    chunks_small = []
-    chunks_large = []
-    for doc in DOCUMENTS:
-        chunks_small.extend(chunk_text(doc, size=200))
-        chunks_large.extend(chunk_text(doc, size=500))
+    st.markdown("---")
+    st.subheader("Live comparison")
+    test_query = st.text_input(
+        "Try a query on both chunk sizes at once:",
+        placeholder="e.g. How is tequila made?"
+    )
+    if test_query:
+        r_a = store_a.similarity_search_with_score(test_query, k=1)
+        r_b = store_b.similarity_search_with_score(test_query, k=1)
+        col1, col2 = st.columns(2)
+        with col1:
+            st.markdown("**Best match (size=200)**")
+            if r_a:
+                st.info(r_a[0][0].page_content)
+        with col2:
+            st.markdown("**Best match (size=500)**")
+            if r_b:
+                st.info(r_b[0][0].page_content)
 
     st.markdown("---")
     st.subheader("Chunk Size Comparison Chart")
     chart_data = pd.DataFrame({
-        "Chunk Size": ["Size 200 (current)", "Size 500 (larger)"],
-        "Number of Chunks": [len(chunks_small), len(chunks_large)]
+        "Chunk Size": ["Size 200 (small)", "Size 500 (large)"],
+        "Number of Chunks": [len(chunks_a), len(chunks_b)]
     })
     st.bar_chart(chart_data.set_index("Chunk Size"))
 
@@ -234,8 +283,8 @@ elif page == "About & Stats":
     st.subheader("About this app")
     st.markdown(f"""
     - **Topic:** {TOPIC_NAME}
-    - **Documents:** {len(DOCUMENTS)} (7 English + 3 Spanish)
-    - **Embedding model:** ChromaDB Default (lightweight ONNX)
+    - **Documents:** {len(DOCUMENTS)} (12 English + 3 Spanish)
+    - **Embedding model:** paraphrase-multilingual-MiniLM-L12-v2
     - **Languages supported:** English and Spanish
     - **Vector DB:** ChromaDB
     - **Framework:** Streamlit + LangChain
