@@ -53,31 +53,28 @@ st.markdown("""
 
 DOCUMENTS = [
     "Tacos are one of the most iconic dishes in Mexican cuisine. A taco consists of a folded or rolled tortilla filled with various ingredients such as beef, chicken, pork, fish, or vegetables. Tacos are typically topped with salsa, guacamole, cilantro, onion, and lime. They originated as street food in Mexico and are now eaten all over the world.",
-    "Guacamole is a creamy avocado-based dip made by mashing ripe avocados with lime juice, salt, cilantro, onion, and tomato. Guacamole originated with the Aztecs in the 16th century. It is commonly served as a dip with tortilla chips or as a topping for tacos and other Mexican dishes.",
+    "Guacamole is a creamy avocado-based dip made by mashing ripe avocados with lime juice, salt, cilantro, onion, and tomato. Guacamole originated with the Aztecs in the 16th century. It is commonly served as a dip with tortilla chips or as a topping for tacos.",
     "Mole is one of the most complex sauces in Mexican cuisine, made from chili peppers, spices, chocolate, and up to 30 different ingredients. The most famous version is mole negro from Oaxaca. It takes hours to prepare and is traditionally served over turkey or chicken.",
     "Tamales are made of masa dough spread on a corn husk, filled with meat or cheese, then folded and steamed. They have been made in Mexico for thousands of years dating back to the Aztecs and Mayans. Tamales are especially popular during Christmas and other celebrations.",
     "Tequila is made from the blue agave plant grown in the state of Jalisco. The agave takes 8 to 12 years to mature. Tequila must be made in Mexico to carry the name. Types include blanco, reposado, and anejo, which differ in aging time in oak barrels.",
-    "Mexican cuisine varies greatly by region. Northern Mexico uses more beef and flour tortillas. The Yucatan Peninsula features Mayan-influenced dishes like cochinita pibil. Oaxaca is known as the land of seven moles and is considered one of the culinary capitals of Mexico.",
-    "Mexico has produced world-renowned chefs like Enrique Olvera, born in 1976, whose restaurant Pujol ranks among the top 50 in the world. In 2010, UNESCO added traditional Mexican cuisine to its Intangible Cultural Heritage list, making it one of the few cuisines with this honor.",
+    "Mexican cuisine varies greatly by region. Northern Mexico uses more beef and flour tortillas. The Yucatan Peninsula features Mayan-influenced dishes like cochinita pibil. Oaxaca is known as the land of seven moles and is one of the culinary capitals of Mexico.",
+    "Mexico has produced world-renowned chefs like Enrique Olvera, born in 1976, whose restaurant Pujol ranks among the top 50 in the world. In 2010, UNESCO added traditional Mexican cuisine to its Intangible Cultural Heritage list.",
     "El taco es el simbolo mas reconocido de la cocina mexicana. Consiste en una tortilla de maiz o harina con rellenos como carne asada, pollo o verduras. Los tacos de calle son parte fundamental de la cultura culinaria mexicana.",
     "El chile es el ingrediente mas importante de la cocina mexicana. Existen mas de 60 variedades en Mexico, desde el suave poblano hasta el picante habanero. Son la base de salsas, moles y marinadas en toda la cocina mexicana.",
     "La cocina mexicana fue declarada Patrimonio Cultural Inmaterial por la UNESCO en 2010. Destaca por su diversidad de ingredientes y sabores regionales. Los ingredientes principales son el maiz, el chile, el frijol y el jitomate.",
 ]
 
-CHUNK_SIZE_A = 150
-CHUNK_SIZE_B = 300
-
 @st.cache_resource(show_spinner="Loading AI model...")
 def load_model():
-    from langchain_huggingface import HuggingFaceEmbeddings
-    return HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2", model_kwargs={"device": "cpu"}, encode_kwargs={"normalize_embeddings": False})
+    from langchain_community.embeddings import HuggingFaceEmbeddings
+    return HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
 
 @st.cache_resource(show_spinner="Building search database...")
-def build_store(_docs: tuple, chunk_size: int = 150):
+def build_store(_docs: tuple):
     from langchain_text_splitters import RecursiveCharacterTextSplitter
     from langchain_community.vectorstores import Chroma
     splitter = RecursiveCharacterTextSplitter(
-        chunk_size=chunk_size,
+        chunk_size=200,
         chunk_overlap=20,
         separators=["\n\n", "\n", ". ", " ", ""],
     )
@@ -87,7 +84,6 @@ def build_store(_docs: tuple, chunk_size: int = 150):
     store = Chroma.from_texts(
         texts=chunks,
         embedding=load_model(),
-        collection_name=f"kb_{chunk_size}",
     )
     return store, chunks
 
@@ -165,7 +161,7 @@ elif page == "Search":
         "Ask a question in English or Spanish",
         placeholder="e.g. What are the most famous Mexican dishes? / Que es el taco?"
     )
-    num_results = st.slider("Number of results", 1, 8, 3)
+    num_results = st.slider("Number of results", 1, 5, 3)
 
     if query:
         with st.spinner("Searching..."):
@@ -221,56 +217,38 @@ elif page == "Explore Chunks":
 elif page == "About & Stats":
     st.title("📊 About & Statistics")
 
-    st.subheader("Chunking Strategy Comparison")
-    st.markdown("This app was tested with two different chunk sizes to compare search quality.")
+    st.subheader("Chunking Strategy")
+    st.markdown("""
+    This app uses **chunk size = 200 characters** with an overlap of 20 characters.
 
-    col1, col2 = st.columns(2)
-    with col1:
-        st.markdown("### Chunk size = 150 chars")
-        st.markdown("""
-        - More chunks created
-        - Results are more precise
-        - Less surrounding context
-        - Better for specific fact queries
-        """)
-        store_a, chunks_a = build_store(tuple(DOCUMENTS), CHUNK_SIZE_A)
-        st.metric("Chunks created", len(chunks_a))
+    **Why chunk size 200?**
+    - Small enough to be precise and focused
+    - Large enough to contain meaningful context
+    - Overlap of 20 chars prevents cutting sentences mid-thought
 
-    with col2:
-        st.markdown("### Chunk size = 300 chars")
-        st.markdown("""
-        - Fewer larger chunks
-        - More surrounding context
-        - May include irrelevant text
-        - Better for broad topic queries
-        """)
-        store_b, chunks_b = build_store(tuple(DOCUMENTS), CHUNK_SIZE_B)
-        st.metric("Chunks created", len(chunks_b))
+    **Comparison with larger chunks (500 chars):**
+    - With size 200: more chunks, more precise results, less context per result
+    - With size 500: fewer chunks, more context, but sometimes includes irrelevant sentences
+    - Size 200 works better for specific fact queries like "What is tequila made from?"
+    """)
 
-    st.markdown("---")
-    st.subheader("Live comparison")
-    test_query = st.text_input(
-        "Try a query on both chunk sizes at once:",
-        placeholder="e.g. How is tequila made?"
-    )
-    if test_query:
-        r_a = store_a.similarity_search_with_score(test_query, k=1)
-        r_b = store_b.similarity_search_with_score(test_query, k=1)
-        col1, col2 = st.columns(2)
-        with col1:
-            st.markdown("**Best match (size=150)**")
-            if r_a:
-                st.info(r_a[0][0].page_content)
-        with col2:
-            st.markdown("**Best match (size=300)**")
-            if r_b:
-                st.info(r_b[0][0].page_content)
+    store, chunks = build_store(tuple(DOCUMENTS))
+    lengths = [len(c) for c in chunks]
 
     st.markdown("---")
     st.subheader("Chunk Size Comparison Chart")
+    from langchain_text_splitters import RecursiveCharacterTextSplitter
+    splitter_small = RecursiveCharacterTextSplitter(chunk_size=200, chunk_overlap=20)
+    splitter_large = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
+    chunks_small = []
+    chunks_large = []
+    for doc in DOCUMENTS:
+        chunks_small.extend(splitter_small.split_text(doc))
+        chunks_large.extend(splitter_large.split_text(doc))
+
     chart_data = pd.DataFrame({
-        "Chunk Size": ["Size 150 (small)", "Size 300 (default)"],
-        "Number of Chunks": [len(chunks_a), len(chunks_b)]
+        "Chunk Size": ["Size 200 (current)", "Size 500 (larger)"],
+        "Number of Chunks": [len(chunks_small), len(chunks_large)]
     })
     st.bar_chart(chart_data.set_index("Chunk Size"))
 
