@@ -52,24 +52,20 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 DOCUMENTS = [
-    "Tacos are one of the most iconic dishes in Mexican cuisine. A taco consists of a folded or rolled tortilla filled with various ingredients such as beef, chicken, pork, fish, or vegetables. The tortilla can be either soft or hard. Tacos are typically topped with salsa, guacamole, cilantro, onion, and lime. They originated as street food in Mexico and are now eaten all over the world.",
-    "Guacamole is a creamy avocado-based dip that is a staple of Mexican cuisine. It is made by mashing ripe avocados and mixing them with lime juice, salt, cilantro, onion, and tomato. Some recipes also add jalapeno for spice. Guacamole originated with the Aztecs, who first made it in the 16th century. It is commonly served as a dip with tortilla chips or as a topping for tacos.",
-    "Enchiladas are a traditional Mexican dish consisting of corn tortillas rolled around a filling and covered with a savory sauce. The filling can include meat, cheese, beans, or vegetables. The sauce is typically made from chili peppers and can be red, green, or brown. Enchiladas are usually topped with cheese, sour cream, and onions. They are baked in the oven until the cheese melts.",
-    "Mole is one of the most complex and celebrated sauces in Mexican cuisine. It is made from a blend of chili peppers, spices, chocolate, and many other ingredients, sometimes up to 30 different components. The most famous version is mole negro from Oaxaca. Mole takes hours or even days to prepare properly. It is traditionally served over turkey or chicken with rice on the side.",
-    "Tamales are a traditional Mesoamerican dish made of masa, which is a dough made from corn. The masa is spread on a corn husk, filled with meat, cheese, or chilies, then folded and steamed. Tamales have been made in Mexico for thousands of years, dating back to ancient Aztec and Mayan civilizations. They are especially popular during holidays and celebrations like Christmas.",
-    "Pozole is a traditional Mexican soup made with hominy corn and meat, usually pork or chicken. It is slow-cooked for hours to develop a rich, deep flavor. Pozole is typically served with toppings such as shredded cabbage, radishes, lime, oregano, and chili flakes. There are three main varieties: red, white, and green, depending on the sauce used. It is a popular dish at celebrations.",
-    "Churros are a popular Mexican fried pastry made from a simple dough of flour, water, and salt. The dough is piped through a star-shaped nozzle and fried until golden and crispy. Churros are then rolled in cinnamon sugar and served with a thick chocolate dipping sauce. They are a common street food in Mexico and are especially popular at fairs and festivals.",
-    "Tequila is Mexico's most famous alcoholic drink, made from the blue agave plant grown primarily in the state of Jalisco. The agave plant takes 8 to 12 years to mature before it can be harvested. Tequila must be made in Mexico to legally carry the name. There are several types including blanco, reposado, and anejo, which differ in how long they are aged in oak barrels.",
-    "Mexican cuisine varies greatly by region. In northern Mexico, the cuisine is heavily influenced by cattle ranching, so beef and cheese are central ingredients. Flour tortillas are more common in the north, while corn tortillas dominate in the south. The Yucatan Peninsula has its own distinct cuisine influenced by Mayan traditions, featuring dishes like cochinita pibil. Oaxaca is known as the land of seven moles.",
-    "Mexican cooking uses several traditional techniques and tools that have been passed down for thousands of years. The comal is a flat griddle used to cook tortillas and roast chiles. The molcajete is a stone mortar and pestle used to grind spices and make salsas. Nixtamalization is an ancient process of soaking corn in an alkaline solution to make masa dough for tortillas and tamales.",
-    "Mexico has produced several world-renowned chefs who have brought Mexican cuisine to international attention. Enrique Olvera, born in 1976 in Mexico City, opened his restaurant Pujol in 2000, which has consistently ranked among the top 50 restaurants in the world. In 2010, UNESCO added traditional Mexican cuisine to its list of Intangible Cultural Heritage of Humanity.",
-    "El taco es el simbolo mas reconocido de la cocina mexicana en el mundo. Consiste en una tortilla de maiz o harina doblada o enrollada con diversos rellenos como carne asada, pollo, pescado o verduras. Los tacos de calle son una parte fundamental de la cultura culinaria mexicana y se pueden encontrar en cada esquina de las ciudades mexicanas.",
-    "El chile es el ingrediente mas importante y representativo de la cocina mexicana. Existen mas de 60 variedades de chiles en Mexico, desde los mas suaves como el poblano hasta los mas picantes como el habanero. Los chiles se usan frescos, secos, ahumados o en polvo. Son la base de salsas, moles, adobos y marinadas en toda la cocina mexicana.",
-    "La cocina mexicana fue declarada Patrimonio Cultural Inmaterial de la Humanidad por la UNESCO en 2010. Es una de las pocas cocinas del mundo que ha recibido este reconocimiento. La cocina mexicana destaca por su gran diversidad de ingredientes, tecnicas de preparacion y sabores regionales. Los ingredientes principales incluyen el maiz, el chile, el frijol y el jitomate.",
+    "Tacos are one of the most iconic dishes in Mexican cuisine. A taco consists of a folded or rolled tortilla filled with various ingredients such as beef, chicken, pork, fish, or vegetables. Tacos are typically topped with salsa, guacamole, cilantro, onion, and lime. They originated as street food in Mexico and are now eaten all over the world.",
+    "Guacamole is a creamy avocado-based dip made by mashing ripe avocados with lime juice, salt, cilantro, onion, and tomato. Guacamole originated with the Aztecs in the 16th century. It is commonly served as a dip with tortilla chips or as a topping for tacos and other Mexican dishes.",
+    "Mole is one of the most complex sauces in Mexican cuisine, made from chili peppers, spices, chocolate, and up to 30 different ingredients. The most famous version is mole negro from Oaxaca. It takes hours to prepare and is traditionally served over turkey or chicken.",
+    "Tamales are made of masa dough spread on a corn husk, filled with meat or cheese, then folded and steamed. They have been made in Mexico for thousands of years dating back to the Aztecs and Mayans. Tamales are especially popular during Christmas and other celebrations.",
+    "Tequila is made from the blue agave plant grown in the state of Jalisco. The agave takes 8 to 12 years to mature. Tequila must be made in Mexico to carry the name. Types include blanco, reposado, and anejo, which differ in aging time in oak barrels.",
+    "Mexican cuisine varies greatly by region. Northern Mexico uses more beef and flour tortillas. The Yucatan Peninsula features Mayan-influenced dishes like cochinita pibil. Oaxaca is known as the land of seven moles and is considered one of the culinary capitals of Mexico.",
+    "Mexico has produced world-renowned chefs like Enrique Olvera, born in 1976, whose restaurant Pujol ranks among the top 50 in the world. In 2010, UNESCO added traditional Mexican cuisine to its Intangible Cultural Heritage list, making it one of the few cuisines with this honor.",
+    "El taco es el simbolo mas reconocido de la cocina mexicana. Consiste en una tortilla de maiz o harina con rellenos como carne asada, pollo o verduras. Los tacos de calle son parte fundamental de la cultura culinaria mexicana.",
+    "El chile es el ingrediente mas importante de la cocina mexicana. Existen mas de 60 variedades en Mexico, desde el suave poblano hasta el picante habanero. Son la base de salsas, moles y marinadas en toda la cocina mexicana.",
+    "La cocina mexicana fue declarada Patrimonio Cultural Inmaterial por la UNESCO en 2010. Destaca por su diversidad de ingredientes y sabores regionales. Los ingredientes principales son el maiz, el chile, el frijol y el jitomate.",
 ]
 
-CHUNK_SIZE_A = 200
-CHUNK_SIZE_B = 500
+CHUNK_SIZE_A = 150
+CHUNK_SIZE_B = 300
 
 @st.cache_resource(show_spinner="Loading AI model...")
 def load_model():
@@ -77,12 +73,12 @@ def load_model():
     return HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2", model_kwargs={"device": "cpu"}, encode_kwargs={"normalize_embeddings": False})
 
 @st.cache_resource(show_spinner="Building search database...")
-def build_store(_docs: tuple, chunk_size: int = 300):
+def build_store(_docs: tuple, chunk_size: int = 150):
     from langchain_text_splitters import RecursiveCharacterTextSplitter
     from langchain_community.vectorstores import Chroma
     splitter = RecursiveCharacterTextSplitter(
         chunk_size=chunk_size,
-        chunk_overlap=int(chunk_size * 0.15),
+        chunk_overlap=20,
         separators=["\n\n", "\n", ". ", " ", ""],
     )
     chunks = []
@@ -159,7 +155,7 @@ if page == "Home":
     col1.metric("Documents", len(DOCUMENTS))
     store, chunks = build_store(tuple(DOCUMENTS))
     col2.metric("Chunks", len(chunks))
-    col3.metric("Embedding model", "Multilingual MiniLM")
+    col3.metric("Embedding model", "MiniLM-L6")
 
 elif page == "Search":
     st.title("🔍 Semantic Search")
@@ -230,7 +226,7 @@ elif page == "About & Stats":
 
     col1, col2 = st.columns(2)
     with col1:
-        st.markdown("### Chunk size = 200 chars")
+        st.markdown("### Chunk size = 150 chars")
         st.markdown("""
         - More chunks created
         - Results are more precise
@@ -241,7 +237,7 @@ elif page == "About & Stats":
         st.metric("Chunks created", len(chunks_a))
 
     with col2:
-        st.markdown("### Chunk size = 500 chars")
+        st.markdown("### Chunk size = 300 chars")
         st.markdown("""
         - Fewer larger chunks
         - More surrounding context
@@ -262,19 +258,19 @@ elif page == "About & Stats":
         r_b = store_b.similarity_search_with_score(test_query, k=1)
         col1, col2 = st.columns(2)
         with col1:
-            st.markdown("**Best match (size=200)**")
+            st.markdown("**Best match (size=150)**")
             if r_a:
                 st.info(r_a[0][0].page_content)
         with col2:
-            st.markdown("**Best match (size=500)**")
+            st.markdown("**Best match (size=300)**")
             if r_b:
                 st.info(r_b[0][0].page_content)
 
     st.markdown("---")
     st.subheader("Chunk Size Comparison Chart")
     chart_data = pd.DataFrame({
-        "Chunk Size": ["Size 200 (small)", "Size 300 (default)", "Size 500 (large)"],
-        "Number of Chunks": [len(chunks_a), len(chunks_a), len(chunks_b)]
+        "Chunk Size": ["Size 150 (small)", "Size 300 (default)"],
+        "Number of Chunks": [len(chunks_a), len(chunks_b)]
     })
     st.bar_chart(chart_data.set_index("Chunk Size"))
 
@@ -282,7 +278,7 @@ elif page == "About & Stats":
     st.subheader("About this app")
     st.markdown(f"""
     - **Topic:** {TOPIC_NAME}
-    - **Documents:** {len(DOCUMENTS)} (11 English + 3 Spanish)
+    - **Documents:** {len(DOCUMENTS)} (7 English + 3 Spanish)
     - **Embedding model:** all-MiniLM-L6-v2
     - **Languages supported:** English and Spanish
     - **Vector DB:** ChromaDB
