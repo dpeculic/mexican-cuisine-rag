@@ -57,21 +57,15 @@ DOCUMENTS = [
     "Enchiladas are a traditional Mexican dish consisting of corn tortillas rolled around a filling and covered with a savory sauce. The filling can include meat, cheese, beans, or vegetables. The sauce is typically made from chili peppers and can be red, green, or brown. Enchiladas are usually topped with cheese, sour cream, and onions. They are baked in the oven until the cheese melts.",
     "Mole is one of the most complex and celebrated sauces in Mexican cuisine. It is made from a blend of chili peppers, spices, chocolate, and many other ingredients, sometimes up to 30 different components. The most famous version is mole negro from Oaxaca. Mole takes hours or even days to prepare properly. It is traditionally served over turkey or chicken with rice on the side.",
     "Tamales are a traditional Mesoamerican dish made of masa, which is a dough made from corn. The masa is spread on a corn husk, filled with meat, cheese, or chilies, then folded and steamed. Tamales have been made in Mexico for thousands of years, dating back to ancient Aztec and Mayan civilizations. They are especially popular during holidays and celebrations like Christmas.",
-    "Chiles en nogada is a patriotic Mexican dish that represents the colors of the Mexican flag. It consists of poblano chili peppers filled with a mixture of meat, fruits, and spices, topped with a white walnut cream sauce and decorated with red pomegranate seeds and green parsley. It is traditionally eaten in September during Mexican Independence Day celebrations.",
     "Pozole is a traditional Mexican soup made with hominy corn and meat, usually pork or chicken. It is slow-cooked for hours to develop a rich, deep flavor. Pozole is typically served with toppings such as shredded cabbage, radishes, lime, oregano, and chili flakes. There are three main varieties: red, white, and green, depending on the sauce used. It is a popular dish at celebrations.",
     "Churros are a popular Mexican fried pastry made from a simple dough of flour, water, and salt. The dough is piped through a star-shaped nozzle and fried until golden and crispy. Churros are then rolled in cinnamon sugar and served with a thick chocolate dipping sauce. They are a common street food in Mexico and are especially popular at fairs and festivals.",
-    "Salsa is a fundamental condiment in Mexican cuisine. The word salsa simply means sauce in Spanish. There are many types of salsa, including salsa roja made with red tomatoes, salsa verde made with tomatillos, and pico de gallo which is a fresh chunky salsa with tomato, onion, and cilantro. Salsa can be mild, medium, or very spicy depending on the type of chili used.",
     "Tequila is Mexico's most famous alcoholic drink, made from the blue agave plant grown primarily in the state of Jalisco. The agave plant takes 8 to 12 years to mature before it can be harvested. Tequila must be made in Mexico to legally carry the name. There are several types including blanco, reposado, and anejo, which differ in how long they are aged in oak barrels.",
-    "Quesadillas are a simple and popular Mexican dish made by filling a tortilla with cheese and then grilling or frying it until the cheese melts. Additional fillings can include mushrooms, peppers, chicken, or black beans. The word quesadilla comes from the Spanish word for cheese, queso. They are a common everyday meal in Mexico and are popular street food in Mexico City.",
-    "Horchata is a traditional Mexican drink made from rice, water, cinnamon, and sugar. The rice is soaked overnight, then blended and strained to create a smooth, milky white drink. It is served cold and is especially refreshing in hot weather. Horchata is a popular accompaniment to spicy Mexican food because its sweetness and creaminess help cool down the heat of the chilies.",
-    "Mexican cuisine varies greatly by region. In northern Mexico, the cuisine is heavily influenced by cattle ranching, so beef and cheese are central ingredients. Flour tortillas are more common in the north, while corn tortillas dominate in the south. The Yucatan Peninsula has its own distinct cuisine influenced by Mayan traditions, featuring dishes like cochinita pibil, a slow roasted pork dish. Oaxaca is known as the land of seven moles and is considered one of the culinary capitals of Mexico.",
-    "Mexican cooking uses several traditional techniques and tools that have been passed down for thousands of years. The comal is a flat griddle used to cook tortillas and roast chiles. The molcajete is a stone mortar and pestle used to grind spices and make salsas. Nixtamalization is an ancient process of soaking corn in an alkaline solution to make masa dough for tortillas and tamales. This technique was developed by the Aztecs over 3500 years ago and significantly increases the nutritional value of corn.",
-    "Mexico has produced several world-renowned chefs who have brought Mexican cuisine to international attention. Enrique Olvera, born in 1976 in Mexico City, opened his restaurant Pujol in 2000, which has consistently ranked among the top 50 restaurants in the world. Diana Kennedy, born in 1923, was a British chef who dedicated her life to documenting authentic Mexican regional cooking and wrote eight influential cookbooks. In 2010, UNESCO added traditional Mexican cuisine to its list of Intangible Cultural Heritage of Humanity.",
-    "Los tamales son uno de los platillos mas antiguos de Mexico. Se elaboran con masa de maiz rellena de carne, queso o chiles, envuelta en hojas de maiz y cocida al vapor. Los tamales tienen mas de 3000 anos de historia y son especialmente populares en Navidad y Dia de Muertos. Cada region de Mexico tiene su propia version del tamal con ingredientes y sabores distintos.",
+    "Mexican cuisine varies greatly by region. In northern Mexico, the cuisine is heavily influenced by cattle ranching, so beef and cheese are central ingredients. Flour tortillas are more common in the north, while corn tortillas dominate in the south. The Yucatan Peninsula has its own distinct cuisine influenced by Mayan traditions, featuring dishes like cochinita pibil. Oaxaca is known as the land of seven moles.",
+    "Mexican cooking uses several traditional techniques and tools that have been passed down for thousands of years. The comal is a flat griddle used to cook tortillas and roast chiles. The molcajete is a stone mortar and pestle used to grind spices and make salsas. Nixtamalization is an ancient process of soaking corn in an alkaline solution to make masa dough for tortillas and tamales.",
+    "Mexico has produced several world-renowned chefs who have brought Mexican cuisine to international attention. Enrique Olvera, born in 1976 in Mexico City, opened his restaurant Pujol in 2000, which has consistently ranked among the top 50 restaurants in the world. In 2010, UNESCO added traditional Mexican cuisine to its list of Intangible Cultural Heritage of Humanity.",
     "El taco es el simbolo mas reconocido de la cocina mexicana en el mundo. Consiste en una tortilla de maiz o harina doblada o enrollada con diversos rellenos como carne asada, pollo, pescado o verduras. Los tacos de calle son una parte fundamental de la cultura culinaria mexicana y se pueden encontrar en cada esquina de las ciudades mexicanas.",
-    "La cocina mexicana fue declarada Patrimonio Cultural Inmaterial de la Humanidad por la UNESCO en 2010. Es una de las pocas cocinas del mundo que ha recibido este reconocimiento. La cocina mexicana destaca por su gran diversidad de ingredientes, tecnicas de preparacion y sabores regionales. Los ingredientes principales incluyen el maiz, el chile, el frijol y el jitomate.",
     "El chile es el ingrediente mas importante y representativo de la cocina mexicana. Existen mas de 60 variedades de chiles en Mexico, desde los mas suaves como el poblano hasta los mas picantes como el habanero. Los chiles se usan frescos, secos, ahumados o en polvo. Son la base de salsas, moles, adobos y marinadas en toda la cocina mexicana.",
-    "El mercado de comida callejera en Mexico es uno de los mas vibrantes del mundo. En las calles de Ciudad de Mexico se pueden encontrar tacos, tamales, elotes, churros, aguas frescas y muchos otros platillos tradicionales. La comida callejera mexicana es economica, deliciosa y refleja la rica diversidad cultural del pais. Los mercados y tianguis son el corazon de la gastronomia popular mexicana.",
+    "La cocina mexicana fue declarada Patrimonio Cultural Inmaterial de la Humanidad por la UNESCO en 2010. Es una de las pocas cocinas del mundo que ha recibido este reconocimiento. La cocina mexicana destaca por su gran diversidad de ingredientes, tecnicas de preparacion y sabores regionales. Los ingredientes principales incluyen el maiz, el chile, el frijol y el jitomate.",
 ]
 
 CHUNK_SIZE_A = 200
@@ -80,7 +74,7 @@ CHUNK_SIZE_B = 500
 @st.cache_resource(show_spinner="Loading AI model...")
 def load_model():
     from langchain_huggingface import HuggingFaceEmbeddings
-   return HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2", model_kwargs={"device": "cpu"}, encode_kwargs={"normalize_embeddings": False})
+    return HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2", model_kwargs={"device": "cpu"}, encode_kwargs={"normalize_embeddings": False})
 
 @st.cache_resource(show_spinner="Building search database...")
 def build_store(_docs: tuple, chunk_size: int = 300):
@@ -203,7 +197,7 @@ elif page == "Search":
     else:
         st.info("👆 Type a question above in English or Spanish to search the knowledge base.")
 
-    st.caption("Powered by paraphrase-multilingual-MiniLM-L12-v2 + ChromaDB")
+    st.caption("Powered by all-MiniLM-L6-v2 + ChromaDB")
 
 elif page == "Explore Chunks":
     st.title("🔬 Explore Chunks")
@@ -288,8 +282,8 @@ elif page == "About & Stats":
     st.subheader("About this app")
     st.markdown(f"""
     - **Topic:** {TOPIC_NAME}
-    - **Documents:** {len(DOCUMENTS)} (15 English + 5 Spanish)
-    - **Embedding model:** paraphrase-multilingual-MiniLM-L12-v2
+    - **Documents:** {len(DOCUMENTS)} (11 English + 3 Spanish)
+    - **Embedding model:** all-MiniLM-L6-v2
     - **Languages supported:** English and Spanish
     - **Vector DB:** ChromaDB
     - **Framework:** Streamlit + LangChain
