@@ -80,7 +80,7 @@ CHUNK_SIZE_B = 500
 @st.cache_resource(show_spinner="Loading AI model...")
 def load_model():
     from langchain_huggingface import HuggingFaceEmbeddings
-    return HuggingFaceEmbeddings(model_name="paraphrase-multilingual-MiniLM-L12-v2", model_kwargs={"device": "cpu"}, encode_kwargs={"normalize_embeddings": False})
+   return HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2", model_kwargs={"device": "cpu"}, encode_kwargs={"normalize_embeddings": False})
 
 @st.cache_resource(show_spinner="Building search database...")
 def build_store(_docs: tuple, chunk_size: int = 300):
